@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.EventSystems;
 
 
 
@@ -33,27 +34,37 @@ public class Emitter : MonoBehaviour
     void Update()
     {
 
-            if (Input.GetMouseButtonDown(0)&&!isDrop)
+            if (Input.GetMouseButtonDown(0))
             {
-                if (GameObject.FindGameObjectWithTag("Waiting"))
+                // Ignore the click outside the canvas
+                if (!EventSystem.current.IsPointerOverGameObject())
                 {
-                    isDrop = true;
-                    GameObject waitingBall = GameObject.FindGameObjectWithTag("Waiting");
-                    Vector3 targetPos = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, waitingBall.transform.position.y, waitingBall.transform.position.z);
-                    waitingBall.transform.DOMoveX(targetPos.x, 0.1f).OnComplete(() =>
-                    {
-                        StartCoroutine(InstantiateNew(waitingBall));
-                    }
-                     );
-
-                    //waitingBall.transform.position = Vector3.MoveTowards(waitingBall.transform.position, targetPos, Time.deltaTime);
-                    //StartCoroutine(MoveTo(waitingBall, targetPos, 5f));
-                    //waitingBall.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
-                    //waitingBall.tag = "Ball";
-                    //StartCoroutine(CreateNewBall(waitingBall, targetPos, 5f));
+                    return;
                 }
 
-            }
+                if (!isDrop)
+                    {
+                        if (GameObject.FindGameObjectWithTag("Waiting"))
+                        {
+                            isDrop = true;
+                            GameObject waitingBall = GameObject.FindGameObjectWithTag("Waiting");
+                            Vector3 targetPos = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, waitingBall.transform.position.y, waitingBall.transform.position.z);
+                            waitingBall.transform.DOMoveX(targetPos.x, 0.1f).OnComplete(() =>
+                            {
+                                StartCoroutine(InstantiateNew(waitingBall));
+                            }
+                             );
+
+                            //waitingBall.transform.position = Vector3.MoveTowards(waitingBall.transform.position, targetPos, Time.deltaTime);
+                            //StartCoroutine(MoveTo(waitingBall, targetPos, 5f));
+                            //waitingBall.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+                            //waitingBall.tag = "Ball";
+                            //StartCoroutine(CreateNewBall(waitingBall, targetPos, 5f));
+                        }
+                    }
+                
+
+                }
     }
 
     private void CreateNewBall(GameObject waitingBall)

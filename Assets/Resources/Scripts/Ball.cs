@@ -66,7 +66,6 @@ public class Ball : MonoBehaviour
                         Destroy(collision.gameObject,0.2f);
                         transform.DOMove(currentLowerBallPos,0.1f).OnComplete(() =>
                         {
-                            print("Tween oncomplete");
                             //Destroy(collision.gameObject);
                             //Destroy(this.gameObject);
                             // Instantiate the particle effect
