@@ -8,6 +8,9 @@ using UnityEngine.EventSystems;
 
 public class Emitter : MonoBehaviour
 {
+    [SerializeField]
+    private BallSet ballSet;
+
     public static List<GameObject> ballList;
     int emittedNumber;
     bool isDrop;
@@ -15,78 +18,123 @@ public class Emitter : MonoBehaviour
     public static List<GameObject> currentCollisions = new List<GameObject>();
     public static GameObject formingBall;
 
-    // Start is called before the first frame update
+    private List<Ball>[] ballPool;
+
+    public Ball WaitForFallBall
+    {
+        get
+        {
+            return waitForFallBall;
+        }
+    }
+
+    private Ball waitForFallBall;
+
+
     void Start()
     {
-        isDrop = false;
-        isForming = false;
-        ballList = new List<GameObject>(Resources.LoadAll<GameObject>("Prefabs/Emittable"));
-        // TODO: Can be put into a method...
-        GameObject ballInstance = (GameObject)Instantiate(ballList[0]);
-        ballInstance.name = ballList[emittedNumber].name;
-        ballInstance.tag = "Waiting";
-        //ballInstance.name = "waiting";
-        ballInstance.transform.position = this.transform.position;
-        ballInstance.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        SpawnBall();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            var targetBall = WaitForFallBall;
 
-            if (Input.GetMouseButtonDown(0))
+            if (targetBall != null)
             {
-                // Ignore the click outside the canvas
-                if (!EventSystem.current.IsPointerOverGameObject())
+                if (Input.GetMouseButton(0))
                 {
-                    return;
-                }
-
-                if (!isDrop)
+                    // Ignore the click outside the canvas
+                    if (!EventSystem.current.IsPointerOverGameObject())
                     {
-                        if (GameObject.FindGameObjectWithTag("Waiting"))
-                        {
-                            isDrop = true;
-                            GameObject waitingBall = GameObject.FindGameObjectWithTag("Waiting");
-                            Vector3 targetPos = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, waitingBall.transform.position.y, waitingBall.transform.position.z);
-                            waitingBall.transform.DOMoveX(targetPos.x, 0.1f).OnComplete(() =>
-                            {
-                                StartCoroutine(InstantiateNew(waitingBall));
-                            }
-                             );
-
-                            //waitingBall.transform.position = Vector3.MoveTowards(waitingBall.transform.position, targetPos, Time.deltaTime);
-                            //StartCoroutine(MoveTo(waitingBall, targetPos, 5f));
-                            //waitingBall.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
-                            //waitingBall.tag = "Ball";
-                            //StartCoroutine(CreateNewBall(waitingBall, targetPos, 5f));
-                        }
+                        return;
                     }
+                    Vector3 targetPos = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, targetBall.transform.position.y, targetBall.transform.position.z);
+                    //    var newPos = new Vector3(targetPos.x, targetFruit.transform.localPosition.y, targetFruit.transform.localPosition.z);
+                    //   targetFruit.transform.localPosition = newPos;
+
+                    // Vector3 targetPos = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, targetBall.transform.position.y, targetBall.transform.position.z);
+                    targetBall.transform.DOMoveX(targetPos.x, 0.1f).OnComplete(() => {
+                        FallWaitingBall();
+                    });
+
+                }
+            }
+        }
+    }
+
+
+
+    //// Update is called once per frame
+    //void Update()
+    //{
+
+    //        if (Input.GetMouseButtonDown(0))
+    //        {
+    //            // Ignore the click outside the canvas
+    //            if (!EventSystem.current.IsPointerOverGameObject())
+    //            {
+    //                return;
+    //            }
+
+    //            if (!isDrop)
+    //                {
+    //                    if (GameObject.FindGameObjectWithTag("Waiting"))
+    //                    {
+    //                        isDrop = true;
+    //                        GameObject waitingBall = GameObject.FindGameObjectWithTag("Waiting");
+    //                        Vector3 targetPos = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, waitingBall.transform.position.y, waitingBall.transform.position.z);
+    //                        waitingBall.transform.DOMoveX(targetPos.x, 0.1f).OnComplete(() =>
+    //                        {
+    //                            StartCoroutine(InstantiateNew(waitingBall));
+    //                        }
+    //                         );
+
+    //                        //waitingBall.transform.position = Vector3.MoveTowards(waitingBall.transform.position, targetPos, Time.deltaTime);
+    //                        //StartCoroutine(MoveTo(waitingBall, targetPos, 5f));
+    //                        //waitingBall.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+    //                        //waitingBall.tag = "Ball";
+    //                        //StartCoroutine(CreateNewBall(waitingBall, targetPos, 5f));
+    //                    }
+    //                }
                 
 
-                }
+    //            }
+    //}
+
+
+
+
+    public void SpawnBall()
+    {
+        int random = Random.Range(0, 4);
+        //Vector3 randomPos = new Vector3(Random.Range(-1080 / 2, 1080 / 2), 1000, 0);
+        var ball = ballSet.GetBall(random);
+        //ball.transform.SetParent(fruitCanvas.transform);
+        //ball.transform.localPosition = randomPos;
+        ball.transform.localPosition = this.transform.position;
+        //ball.transform.localPosition = new Vector3(0, 1000, 0);
+        //ball.transform.localScale = Vector3.one;
+        ball.GetComponent<Rigidbody2D>().simulated = false;
+        waitForFallBall = ball;
     }
 
-    private void CreateNewBall(GameObject waitingBall)
+    public void FallWaitingBall()
     {
-        //waitingBall.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
-        //waitingBall.tag = "Ball";
-        emittedNumber = Random.Range(0, ballList.Count);
-        GameObject ballInstance = (GameObject)Instantiate(ballList[emittedNumber]);
-        ballInstance.name = ballList[emittedNumber].name;
-        ballInstance.tag = "Waiting";
-        ballInstance.transform.position = this.transform.position;
-        ballInstance.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
-    }
-
-    IEnumerator InstantiateNew(GameObject waitingBall)
-    {
-        waitingBall.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
-        waitingBall.tag = "Ball";
-        yield return new WaitForSeconds(0.8f);
-        isDrop = false;
-        CreateNewBall(waitingBall);
-
+        if (waitForFallBall != null)
+        {
+            print("Fall!");
+            waitForFallBall.ToFall();
+            waitForFallBall = null;
+            Invoke("SpawnBall", .5f);
+            //if (GameManager.Instance.MyGameState.Equals(GameManager.GameState.Gaming))
+            //{
+            //    Invoke("SpawnFruit", .5f);
+            //}
+            //safeLine.DisableForAWhile(2);
+        }
     }
 
 }
