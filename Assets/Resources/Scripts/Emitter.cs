@@ -20,6 +20,9 @@ public class Emitter : MonoBehaviour
 
     private List<Ball>[] ballPool;
 
+    [SerializeField]
+    private Deadline deadLine;
+
     public Ball WaitForFallBall
     {
         get
@@ -30,10 +33,32 @@ public class Emitter : MonoBehaviour
 
     private Ball waitForFallBall;
 
+    public static Emitter Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
+
+    private static Emitter instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            throw new UnityException("Already exist instance：" + name);
+        }
+    }
+
 
     void Start()
     {
-        SpawnBall();
+        //SpawnBall();
     }
 
     void Update()
@@ -125,16 +150,36 @@ public class Emitter : MonoBehaviour
     {
         if (waitForFallBall != null)
         {
-            print("Fall!");
             waitForFallBall.ToFall();
             waitForFallBall = null;
-            Invoke("SpawnBall", .5f);
-            //if (GameManager.Instance.MyGameState.Equals(GameManager.GameState.Gaming))
-            //{
-            //    Invoke("SpawnFruit", .5f);
-            //}
-            //safeLine.DisableForAWhile(2);
+            //Invoke("SpawnBall", .5f);
+            if (GameManager.Instance.ThisGameState.Equals(GameManager.GameState.InGame))
+            {
+                Invoke("SpawnBall", .5f);
+            }
+            deadLine.DisableForAWhile(2);
         }
+    }
+
+    public void ClearBall()
+    {
+        StartCoroutine(ClearBallIEn());
+    }
+
+    IEnumerator ClearBallIEn()
+    {
+        var ballsInScene = GameObject.FindGameObjectsWithTag("Ball");
+        for(int i = 0; i < ballsInScene.Length; i++)
+        {
+            var ballToClear = ballsInScene[i];
+            if (ballToClear.gameObject.activeSelf)
+            {
+                ballToClear.GetComponent<Ball>().DestroyBall();
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+        //PopupGenerator.Instance.OpenPopup<GameOverPopup>(PopupGenerator.PopupType.GameOverPopup.ToString(), null, 0.5f);
+
     }
 
 }

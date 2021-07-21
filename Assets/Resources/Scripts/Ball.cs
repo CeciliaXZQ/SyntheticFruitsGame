@@ -58,6 +58,8 @@ public class Ball : MonoBehaviour
 
     private void OnEnable()
     {
+        Vector3 origScale = this.transform.localScale;
+        this.transform.localScale = new Vector3(0, 0, origScale.z);
         CanMergeTrue();
         if (rdbody2D != null)
         {
@@ -69,10 +71,11 @@ public class Ball : MonoBehaviour
             spriteRender.enabled = true;
         }
 
-        if (animator != null)
-        {
-            animator.Play("Appear");
-        }
+        Sequence mySequence = DOTween.Sequence();
+        //animator.Play("Appear");
+        mySequence.Append(this.transform.DOScale(new Vector3(origScale.x+0.002f, origScale.y,origScale.z), 0.3f))
+            .Append(this.transform.DOScale(new Vector3(origScale.x - 0.001f, origScale.y, origScale.z), 0.3f))
+            .Append(this.transform.DOScale(new Vector3(origScale.x, origScale.y, origScale.z), 0.3f));
 
     }
 
@@ -202,7 +205,7 @@ public class Ball : MonoBehaviour
 
     void Recycle()
     {
-        print(this.ID);
+      //  print(this.ID);
         oriBallSet.Recycle(this);
     }
 
@@ -221,7 +224,7 @@ public class Ball : MonoBehaviour
     {
         spriteRender.enabled = false;
         rdbody2D.simulated = false;
-        explodeEffect?.Play();
+        //explodeEffect?.Play();
         Invoke("Recycle", 1.2f);
         //ScoreContro.Instance.AddScore(baseScore);
     }
