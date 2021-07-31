@@ -14,6 +14,11 @@ public class Ball : MonoBehaviour
     private GameObject lowerOne;
     public float interactionCooldown = 1f;
 
+    [SerializeField]
+    private int baseScore;
+    [SerializeField]
+    private int mergeExtraScore;
+
     private float timeSinceInteraction;
     private bool canInteract;
     private bool hasCollide = false;
@@ -119,7 +124,7 @@ public class Ball : MonoBehaviour
                     newball.transform.localPosition = ball.transform.localPosition;
                     //newball.transform.localScale = Vector3.one;
                 }
-               // ScoreContro.Instance.AddScore(mergeExtraScore);
+                ScoreSetter.Instance.AddScore(mergeExtraScore);
             });
         }
     }
@@ -226,7 +231,7 @@ public class Ball : MonoBehaviour
         rdbody2D.simulated = false;
         //explodeEffect?.Play();
         Invoke("Recycle", 1.2f);
-        //ScoreContro.Instance.AddScore(baseScore);
+        ScoreSetter.Instance.AddScore(baseScore);
     }
 
 

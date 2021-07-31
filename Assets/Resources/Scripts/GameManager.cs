@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
     void GameStart()
     {
         Emitter.Instance.SpawnBall();
-       // ScoreContro.Instance.Restart();
+        ScoreSetter.Instance.Restart();
     }
 
     void StateChange()

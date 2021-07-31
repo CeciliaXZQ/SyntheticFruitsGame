@@ -701,6 +701,8 @@ MonoBehaviour:
     type: 3}
   explodeEffect: {fileID: 0}
   interactionCooldown: 1
+  baseScore: 0
+  mergeExtraScore: 0
   canMerge: 0
 --- !u!224 &863385861
 RectTransform:
@@ -1228,6 +1230,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1708188942}
   - component: {fileID: 1708188943}
+  - component: {fileID: 1708188944}
   m_Layer: 5
   m_Name: Score
   m_TagString: Untagged
@@ -1279,6 +1282,20 @@ MonoBehaviour:
   - {fileID: 2175370069316379511, guid: 3ffebc137c44d8647b06ec7e5dddb78d, type: 3}
   imgPrefabs: {fileID: 528145085721539508, guid: 1cff98126af2a4b43981618119de6df0,
     type: 3}
+--- !u!114 &1708188944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1708188941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dac3ed114feb1b41ba32b98dc2c3bc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDuration: 1
+  resetNumber: 0
 --- !u!1 &1743967801
 GameObject:
   m_ObjectHideFlags: 0

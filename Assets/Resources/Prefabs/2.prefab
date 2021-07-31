@@ -140,6 +140,8 @@ MonoBehaviour:
   explodeEffect: {fileID: 3609261641847314499, guid: c19ecb9f5c7a21c4a84724de89810b3b,
     type: 3}
   interactionCooldown: 1
+  baseScore: 2
+  mergeExtraScore: 0
   canMerge: 0
 --- !u!198 &-4630815921811930341
 ParticleSystem:

@@ -20,12 +20,12 @@ public class NumberShower : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            int value = Random.Range(0, 200);
-            DisplayScore(value);
-            Debug.Log(value);
-        }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    int value = Random.Range(0, 200);
+        //    DisplayScore(value);
+        //    Debug.Log(value);
+        //}
     }
 
     public void DisplayScore(int score)
