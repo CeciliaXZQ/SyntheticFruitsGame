@@ -85,6 +85,7 @@ public class Emitter : MonoBehaviour
                         FallWaitingBall();
                     });
 
+
                 }
             }
         }
@@ -178,7 +179,7 @@ public class Emitter : MonoBehaviour
                 yield return new WaitForSeconds(0.1f);
             }
         }
-        //PopupGenerator.Instance.OpenPopup<GameOverPopup>(PopupGenerator.PopupType.GameOverPopup.ToString(), null, 0.5f);
+        PopUpGenerator.Instance.OpenPopup<GameOverPopUp>(PopUpGenerator.PopupType.GameOverPopup.ToString(), null, 0.5f);
 
     }
 
